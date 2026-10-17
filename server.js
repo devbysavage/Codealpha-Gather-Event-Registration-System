@@ -18,8 +18,9 @@ app.use("/api/auth", authRoutes);
 const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URI)
+console.log("MONGODB_URI exists:", Boolean(process.env.MONGODB_URI));
+console.log("MONGODB_URI scheme:", process.env.MONGODB_URI?.split(":")[0]);
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("MongoDB connected successfully!");
     app.listen(PORT, () => {
