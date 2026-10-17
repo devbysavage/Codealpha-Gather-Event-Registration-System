@@ -1,0 +1,707 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Organizer Dashboard — Gather.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink: #24231f;
+      --muted: #85847e;
+      --paper: #f8f7f3;
+      --white: #fffefa;
+      --line: #eae8e0;
+      --orange: #e87945;
+      --green: #3f755b;
+      --shadow: 0 12px 35px rgba(36,35,31,.045);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "DM Sans", sans-serif;
+    }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .app { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 245px;
+      flex-shrink: 0;
+      background: var(--white);
+      border-right: 1px solid var(--line);
+      padding: 30px 19px;
+      display: flex;
+      flex-direction: column;
+    }
+    .brand {
+      font: 800 29px Manrope, sans-serif;
+      letter-spacing: -1.8px;
+      padding: 0 13px;
+    }
+    .brand span { color: var(--orange); }
+    .side-label {
+      margin: 43px 13px 13px;
+      color: #aaa79e;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+    }
+    .nav-link {
+      border: 0;
+      width: 100%;
+      background: transparent;
+      padding: 13px;
+      border-radius: 10px;
+      text-align: left;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      color: #77756e;
+      margin: 3px 0;
+      font-size: 13px;
+      transition: .2s;
+    }
+    .nav-link:hover, .nav-link.active {
+      background: #f8eee7;
+      color: #b9572e;
+    }
+    .nav-icon { width: 20px; text-align: center; font-size: 17px; }
+    .sidebar-bottom { margin-top: auto; padding-top: 30px; }
+    .profile {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 15px 8px 0;
+      border-top: 1px solid var(--line);
+    }
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: #f2e2d6;
+      color: #a24e2c;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+    }
+    .profile-name { font-size: 12px; font-weight: 700; }
+    .profile-role { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+    main { flex: 1; min-width: 0; padding: 34px 4.2%; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+      font-size: 10px;
+      color: var(--orange);
+      font-weight: 700;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      font: 800 clamp(25px, 3vw, 34px) Manrope, sans-serif;
+      letter-spacing: -1.3px;
+      margin: 8px 0;
+    }
+    .subtitle { color: var(--muted); font-size: 13px; margin: 0; }
+    .button {
+      border: 0;
+      border-radius: 9px;
+      padding: 13px 18px;
+      background: var(--ink);
+      color: white;
+      font-weight: 600;
+      font-size: 12px;
+      transition: transform .2s, background .2s;
+    }
+    .button:hover { transform: translateY(-1px); background: #44413a; }
+    .button.orange { background: var(--orange); }
+    .button.orange:hover { background: #cc6738; }
+    .button.light { background: white; color: var(--ink); border: 1px solid var(--line); }
+
+    .welcome {
+      margin: 28px 0;
+      padding: 27px 30px;
+      border-radius: 17px;
+      background: #292923;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+    .welcome:after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      right: 12%;
+      top: -140px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.13);
+      box-shadow: 0 0 0 25px rgba(255,255,255,.025), 0 0 0 55px rgba(255,255,255,.025);
+      pointer-events: none;
+    }
+    .welcome h2 {
+      font: 700 21px Manrope, sans-serif;
+      letter-spacing: -.5px;
+      margin: 9px 0;
+    }
+    .welcome p { color: #c6c3b9; font-size: 12px; margin: 0; line-height: 1.7; }
+    .welcome .button { position: relative; z-index: 1; white-space: nowrap; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 22px;
+    }
+    .stat-top { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+    .stat-label { color: var(--muted); font-size: 12px; }
+    .stat-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: #f8eee7;
+      font-size: 17px;
+    }
+    .stat-value { font: 800 29px Manrope, sans-serif; letter-spacing: -1px; margin: 17px 0 4px; }
+    .stat-note { color: #99968d; font-size: 11px; }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 17px;
+    }
+    .section-heading h2 { font: 700 18px Manrope, sans-serif; letter-spacing: -.5px; margin: 0; }
+    .section-heading p { color: var(--muted); font-size: 12px; margin: 6px 0 0; }
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      padding: 23px;
+      margin-bottom: 27px;
+    }
+    .event-list { display: grid; gap: 12px; }
+    .event-row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .event-date {
+      flex-shrink: 0;
+      width: 52px;
+      height: 58px;
+      background: #f8eee7;
+      border-radius: 9px;
+      display: grid;
+      place-content: center;
+      text-align: center;
+    }
+    .event-date strong { font: 800 21px Manrope, sans-serif; }
+    .event-date span { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #b9572e; font-weight: 700; }
+    .event-info { flex: 1; min-width: 0; }
+    .event-info h3 { font-size: 13px; margin: 0 0 5px; }
+    .event-info p { color: var(--muted); font-size: 11px; margin: 0; }
+    .event-capacity { font-size: 11px; color: var(--green); white-space: nowrap; }
+
+    .empty {
+      text-align: center;
+      padding: 40px 20px;
+      border: 1px dashed #dedbd1;
+      border-radius: 12px;
+    }
+    .empty-icon { font-size: 27px; margin-bottom: 12px; }
+    .empty h3 { font: 700 15px Manrope, sans-serif; margin-bottom: 7px; }
+    .empty p { font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 18px; }
+    .notice { font-size: 12px; color: var(--muted); padding: 13px 15px; background: #f5f3ed; border-radius: 9px; margin-bottom: 15px; }
+
+    .view { display: none; }
+    .view.active { display: block; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 17px; }
+    .field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 17px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 12px; font-weight: 700; }
+    .field input, .field textarea {
+      width: 100%;
+      border: 1px solid #e4e1d8;
+      border-radius: 9px;
+      background: white;
+      padding: 13px 14px;
+      outline: none;
+      color: var(--ink);
+      font-size: 12px;
+      transition: border .2s, box-shadow .2s;
+    }
+    .field input:focus, .field textarea:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(232,121,69,.1);
+    }
+    .field textarea { min-height: 105px; resize: vertical; }
+    .form-actions { display: flex; gap: 10px; align-items: center; }
+    .message { margin-top: 15px; padding: 13px; border-radius: 9px; font-size: 12px; display: none; }
+    .message.error { display: block; color: #a42c2c; background: #fff0ed; }
+    .message.success { display: block; color: #276546; background: #eaf6ed; }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { font-size: 10px; color: #99968d; text-transform: uppercase; letter-spacing: 1px; padding: 13px; }
+    td { font-size: 12px; padding: 15px 13px; border-top: 1px solid var(--line); }
+    .tag { display: inline-block; border-radius: 20px; padding: 5px 9px; font-size: 10px; background: #eaf6ed; color: #276546; }
+    .small-button { border: 1px solid var(--line); background: white; padding: 8px 10px; border-radius: 7px; font-size: 11px; }
+    .small-button:hover { border-color: var(--orange); }
+
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      max-width: min(360px, calc(100vw - 32px));
+      background: #292923;
+      color: white;
+      border-radius: 11px;
+      padding: 15px 18px;
+      font-size: 12px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: .25s;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 950px) {
+      .sidebar { width: 205px; }
+      main { padding: 28px 3%; }
+      .stats { gap: 10px; }
+      .stat-card { padding: 16px; }
+    }
+    @media (max-width: 700px) {
+      .app { display: block; }
+      .sidebar { width: 100%; padding: 16px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .brand { padding: 0 5px; font-size: 25px; }
+      .side-label, .sidebar-bottom { display: none; }
+      .sidebar nav { display: flex; overflow-x: auto; gap: 5px; margin-top: 15px; }
+      .nav-link { width: auto; white-space: nowrap; padding: 10px 12px; }
+      main { padding: 24px 16px; }
+      .topbar { align-items: flex-start; }
+      .topbar .button { padding: 11px; }
+      .welcome { padding: 22px; align-items: flex-start; flex-direction: column; }
+      .welcome:after { right: -80px; }
+      .stats { grid-template-columns: 1fr; }
+      .stat-card { padding: 18px; }
+      .stat-value { margin-top: 10px; }
+      .form-grid { grid-template-columns: 1fr; gap: 0; }
+      .field.full { grid-column: auto; }
+      .event-row { gap: 10px; padding: 10px; }
+      .event-capacity { display: none; }
+      .panel { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">Gather<span>.</span></div>
+      <div class="side-label">Workspace</div>
+      <nav>
+        <button class="nav-link active" data-view="overview"><span class="nav-icon">◫</span> Overview</button>
+        <button class="nav-link" data-view="events"><span class="nav-icon">▦</span> My events</button>
+        <button class="nav-link" data-view="create"><span class="nav-icon">＋</span> Create event</button>
+        <button class="nav-link" data-view="attendees"><span class="nav-icon">♙</span> Attendees</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="profile">
+          <div class="avatar" id="avatar">O</div>
+          <div>
+            <div class="profile-name" id="organizerName">Organizer</div>
+            <div class="profile-role">Event organizer</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">Your workspace</div>
+          <h1 id="pageTitle">Good to see you.</h1>
+          <p class="subtitle" id="pageSubtitle">Here's what's happening with your events.</p>
+        </div>
+        <button class="button orange" id="topCreate">＋ Create event</button>
+      </header>
+
+      <section class="view active" id="overview">
+        <div class="welcome">
+          <div>
+            <div class="eyebrow">Make something memorable</div>
+            <h2>Your next great gathering starts here.</h2>
+            <p>Create experiences people look forward to.<br>Manage your events, all in one place.</p>
+          </div>
+          <button class="button orange" data-go="create">Create your first event ↗</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-top"><span class="stat-label">Total events</span><span class="stat-icon">▦</span></div>
+            <div class="stat-value" id="statEvents">—</div>
+            <div class="stat-note">Events currently listed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-top"><span class="stat-label">Registrations</span><span class="stat-icon">♙</span></div>
+            <div class="stat-value" id="statRegistrations">—</div>
+            <div class="stat-note">Across all events</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-top"><span class="stat-label">Upcoming events</span><span class="stat-icon">◷</span></div>
+            <div class="stat-value" id="statUpcoming">—</div>
+            <div class="stat-note">Scheduled for the future</div>
+          </div>
+        </div>
+
+        <div class="section-heading">
+          <div><h2>Recently listed</h2><p>Your latest events at a glance.</p></div>
+          <button class="button light" data-go="events">View all</button>
+        </div>
+        <div class="panel"><div id="recentEvents" class="event-list"></div></div>
+      </section>
+
+      <section class="view" id="events">
+        <div class="section-heading"><div><h2>My events</h2><p>Events available on Gather.</p></div></div>
+        <div class="panel"><div id="allEvents" class="event-list"></div></div>
+      </section>
+
+      <section class="view" id="create">
+        <div class="section-heading"><div><h2>Create an event</h2><p>Give people something worth showing up for.</p></div></div>
+        <div class="panel">
+          <div class="notice">Fields marked with * are required. Your event will be submitted to the Gather. API.</div>
+          <form id="eventForm">
+            <div class="form-grid">
+              <div class="field full">
+                <label for="title">Event title *</label>
+                <input id="title" name="title" placeholder="e.g. Creative Futures Summit" required maxlength="120">
+              </div>
+              <div class="field full">
+                <label for="description">Description *</label>
+                <textarea id="description" name="description" placeholder="What will attendees experience?" required></textarea>
+              </div>
+              <div class="field">
+                <label for="date">Date and time *</label>
+                <input id="date" name="date" type="datetime-local" required>
+              </div>
+              <div class="field">
+                <label for="venue">Venue *</label>
+                <input id="venue" name="venue" placeholder="e.g. Lagos, Nigeria" required>
+              </div>
+              <div class="field">
+                <label for="capacity">Attendee capacity *</label>
+                <input id="capacity" name="capacity" type="number" min="1" max="100000" placeholder="100" required>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="button orange" id="publishButton">Publish event ↗</button>
+              <button type="reset" class="button light">Clear form</button>
+            </div>
+            <div id="formMessage" class="message" role="status"></div>
+          </form>
+        </div>
+      </section>
+
+      <section class="view" id="attendees">
+        <div class="section-heading"><div><h2>Attendees</h2><p>Registration details from your events.</p></div></div>
+        <div class="panel">
+          <div id="attendeeContent">
+            <div class="empty"><div class="empty-icon">♙</div><h3>Loading attendees</h3><p>Gathering your registration information…</p></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const API_BASE = "/api";
+    let organizerToken = sessionStorage.getItem("gatherOrganizerToken") || "";
+    let events = [];
+    let registrations = [];
+
+    const titles = {
+      overview: ["Good to see you.", "Here's what's happening with your events."],
+      events: ["Your events.", "All events currently listed on Gather."],
+      create: ["Create something great.", "Bring your next event to life."],
+      attendees: ["Your attendees.", "The people showing up for your events."]
+    };
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3200);
+    }
+
+    function setView(view) {
+      if (!document.getElementById(view)) return;
+      document.querySelectorAll(".view").forEach(section => section.classList.remove("active"));
+      document.getElementById(view).classList.add("active");
+      document.querySelectorAll(".nav-link").forEach(button => {
+        button.classList.toggle("active", button.dataset.view === view);
+      });
+      document.getElementById("pageTitle").textContent = titles[view][0];
+      document.getElementById("pageSubtitle").textContent = titles[view][1];
+      if (view === "attendees") loadRegistrations();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelectorAll("[data-view]").forEach(button => {
+      button.addEventListener("click", () => setView(button.dataset.view));
+    });
+    document.querySelectorAll("[data-go]").forEach(button => {
+      button.addEventListener("click", () => setView(button.dataset.go));
+    });
+    document.getElementById("topCreate").addEventListener("click", () => setView("create"));
+
+    function formatDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return { day: "—", month: "TBA", full: "Date to be announced" };
+      return {
+        day: date.toLocaleDateString("en", { day: "2-digit" }),
+        month: date.toLocaleDateString("en", { month: "short" }),
+        full: date.toLocaleString("en", { dateStyle: "medium", timeStyle: "short" })
+      };
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[char]);
+    }
+
+    function eventMarkup(event) {
+      const date = formatDate(event.date);
+      return `
+        <article class="event-row">
+          <div class="event-date"><strong>${escapeHTML(date.day)}</strong><span>${escapeHTML(date.month)}</span></div>
+          <div class="event-info">
+            <h3>${escapeHTML(event.title || "Untitled event")}</h3>
+            <p>${escapeHTML(event.venue || "Venue to be announced")} · ${escapeHTML(date.full)}</p>
+          </div>
+          <div class="event-capacity">${escapeHTML(event.capacity ?? "—")} spots</div>
+        </article>`;
+    }
+
+    function renderEvents() {
+      const sorted = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
+      document.getElementById("statEvents").textContent = events.length;
+      document.getElementById("statUpcoming").textContent =
+        events.filter(event => new Date(event.date) >= new Date()).length;
+      document.getElementById("recentEvents").innerHTML = sorted.length
+        ? sorted.slice(0, 3).map(eventMarkup).join("")
+        : '<div class="empty"><div class="empty-icon">✳</div><h3>No events yet</h3><p>Create your first event to get started.</p><button class="button orange" data-go="create">Create event</button></div>';
+      document.getElementById("allEvents").innerHTML = sorted.length
+        ? sorted.map(eventMarkup).join("")
+        : '<div class="empty"><h3>No events listed yet</h3><p>Your published events will appear here.</p></div>';
+
+      const emptyCreate = document.querySelector("#recentEvents [data-go='create']");
+      if (emptyCreate) emptyCreate.addEventListener("click", () => setView("create"));
+    }
+
+    async function loadEvents() {
+      try {
+        const response = await fetch(`${API_BASE}/events`);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Could not load events.");
+        events = Array.isArray(data) ? data : (data.events || []);
+        renderEvents();
+      } catch (error) {
+        document.getElementById("recentEvents").innerHTML =
+          '<div class="empty"><h3>Could not load events</h3><p>Check that the Gather. server is running, then refresh this page.</p></div>';
+        document.getElementById("allEvents").innerHTML =
+          '<div class="empty"><h3>Unable to connect</h3><p>Please refresh when the server is available.</p></div>';
+      }
+    }
+
+    async function loadRegistrations() {
+      const container = document.getElementById("attendeeContent");
+      container.innerHTML = '<div class="empty"><div class="empty-icon">◷</div><h3>Loading registrations</h3><p>Fetching attendee information…</p></div>';
+
+      try {
+        const response = await fetch(`${API_BASE}/registrations`, {
+          headers: organizerToken ? { Authorization: `Bearer ${organizerToken}` } : {}
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Could not load registrations.");
+
+        registrations = Array.isArray(data) ? data : (data.registrations || []);
+        document.getElementById("statRegistrations").textContent = registrations.length;
+
+        if (!registrations.length) {
+          container.innerHTML = '<div class="empty"><div class="empty-icon">♙</div><h3>No registrations yet</h3><p>When people register for your events, their details will appear here.</p></div>';
+          return;
+        }
+
+        
+container.innerHTML = `
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>Attendee</th>
+  <th>Email</th>
+  <th>Event</th>
+  <th>Status</th>
+  <th>Action</th>
+</tr>
+</thead>
+<tbody>${registrations.map(item => {
+  const user = item.user || item.attendee || {};
+  const event = item.event || {};
+
+  return `<tr>
+    <td>${escapeHTML(user.fullName || item.fullName || "Attendee")}</td>
+    <td>${escapeHTML(user.email || item.email || "—")}</td>
+    <td>${escapeHTML(event.title || item.eventTitle || "Event")}</td>
+    <td><span class="tag">Registered</span></td>
+    <td>
+      <button
+        class="cancel-registration-btn"
+        onclick="cancelRegistration('${item._id}')"
+        type="button"
+      >Cancel</button>
+    </td>
+  </tr>`;
+}).join("")}</tbody>
+</table></div>`;
+
+      } catch (error) {
+        document.getElementById("statRegistrations").textContent = "—";
+        container.innerHTML = `<div class="empty"><div class="empty-icon">!</div><h3>Could not load registrations</h3><p>${escapeHTML(error.message)}</p><p>Your existing registration API may not require organizer login, or its response format may differ. We can align this once we see the result.</p><button class="button light" id="retryRegistrations">Try again</button></div>`;
+        const retry = document.getElementById("retryRegistrations");
+        if (retry) retry.addEventListener("click", loadRegistrations);
+      }
+    }
+
+    
+async function cancelRegistration(registrationId) {
+  const confirmed = window.confirm(
+    "Are you sure you want to cancel this registration?"
+  );
+
+  if (!confirmed) return;
+
+  try {
+    const response = await fetch(
+      `/api/registrations/${registrationId}`,
+      {
+        method: "DELETE"
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Could not cancel registration.");
+    }
+
+    showToast("Registration cancelled successfully.");
+    await loadRegistrations();
+    await loadStats();
+  } catch (error) {
+    showToast(error.message || "Something went wrong.");
+  }
+}
+
+
+    document.getElementById("eventForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const button = document.getElementById("publishButton");
+      const message = document.getElementById("formMessage");
+      message.className = "message";
+      message.textContent = "";
+
+      if (!organizerToken) {
+        message.textContent = "Your organizer login token is missing. Please log out and sign in again from the Gather. homepage.";
+        message.className = "message error";
+        return;
+      }
+
+      const formData = new FormData(form);
+      const payload = {
+        title: formData.get("title").trim(),
+        description: formData.get("description").trim(),
+        date: new Date(formData.get("date")).toISOString(),
+        venue: formData.get("venue").trim(),
+        capacity: Number(formData.get("capacity"))
+      };
+
+      button.disabled = true;
+      button.textContent = "Publishing…";
+
+      try {
+        const response = await fetch(`${API_BASE}/events`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${organizerToken}`
+          },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Could not publish event.");
+
+        message.textContent = "Your event has been published successfully.";
+        message.className = "message success";
+        form.reset();
+        showToast("Your event is live on Gather.");
+        await loadEvents();
+        setView("events");
+      } catch (error) {
+        message.textContent = error.message || "Something went wrong. Please try again.";
+        message.className = "message error";
+      } finally {
+        button.disabled = false;
+        button.textContent = "Publish event ↗";
+      }
+    });
+
+    document.getElementById("date").min = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      .toISOString().slice(0, 16);
+
+    const savedOrganizerName = sessionStorage.getItem("gatherOrganizerName") || "Organizer";
+    document.getElementById("organizerName").textContent = savedOrganizerName;
+    document.getElementById("avatar").textContent = savedOrganizerName.trim().charAt(0).toUpperCase() || "O";
+
+    loadEvents();
+    loadRegistrations();
+  </script>
+</body>
+</html>

@@ -1,0 +1,911 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f7f5f0" />
+  <title>Gather. — Find Your Next Experience</title>
+  <meta name="description" content="Discover inspiring events, meet your people, and make room for experiences worth remembering." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --paper: #f7f5f0;
+      --white: #fffefa;
+      --ink: #1b1b19;
+      --muted: #77766f;
+      --line: #e6e3dc;
+      --orange: #ef623b;
+      --orange-dark: #d94e29;
+      --green: #456b50;
+      --radius: 18px;
+      --shadow: 0 18px 55px rgba(35, 32, 25, .09);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "DM Sans", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select, textarea { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; }
+    .container { width: min(1160px, calc(100% - 48px)); margin-inline: auto; }
+
+    .announcement {
+      background: var(--ink);
+      color: #f8f5ed;
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .announcement span { color: #ff987b; }
+
+    header {
+      height: 78px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      background: rgba(247,245,240,.92);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand {
+      font: 800 30px/1 "Manrope", sans-serif;
+      letter-spacing: -2px;
+    }
+    .brand span { color: var(--orange); }
+    .nav-links { display: flex; align-items: center; gap: 30px; font-size: 13px; color: #55544e; }
+    .nav-links a:hover { color: var(--orange-dark); }
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 12px 19px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      transition: transform .2s, background .2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-dark { background: var(--ink); color: white; }
+    .btn-dark:hover { background: #34342f; }
+    .btn-orange { background: var(--orange); color: white; }
+    .btn-orange:hover { background: var(--orange-dark); }
+    .btn-outline { border-color: #d8d5cc; background: transparent; }
+    .btn-outline:hover { background: #eeece5; }
+    .mobile-menu { display: none; }
+
+    .hero { padding: 72px 0 64px; }
+    .hero-grid { display: grid; grid-template-columns: 1.03fr .97fr; gap: 64px; align-items: center; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .eyebrow::before { content: ""; width: 25px; height: 1px; background: var(--orange); }
+    h1 {
+      font: 600 clamp(46px, 6vw, 76px)/1.06 "Manrope", sans-serif;
+      letter-spacing: -.075em;
+      margin-top: 24px;
+      max-width: 600px;
+    }
+    h1 em { color: var(--orange); font-style: normal; }
+    .hero-copy {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 14px;
+      max-width: 410px;
+      margin-top: 22px;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 29px; }
+    .hero-foot { display: flex; align-items: center; gap: 12px; margin-top: 37px; }
+    .avatars { display: flex; }
+    .avatar {
+      width: 31px; height: 31px; border: 2px solid var(--paper);
+      border-radius: 50%; margin-left: -7px; display: grid; place-items: center;
+      background: #dfb79d; font-size: 9px; font-weight: 800;
+    }
+    .avatar:first-child { margin-left: 0; background: #b8c4a6; }
+    .avatar:nth-child(2) { background: #dfb79d; }
+    .avatar:nth-child(3) { background: #c4b2d1; }
+    .avatar:nth-child(4) { background: #e8c67e; }
+    .hero-foot p { font-size: 11px; color: var(--muted); line-height: 1.6; }
+    .hero-foot strong { color: var(--ink); }
+
+    .hero-art { min-height: 440px; position: relative; }
+    .hero-photo {
+      position: absolute; inset: 0 0 15px 38px;
+      border-radius: 180px 180px 16px 16px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, transparent 45%, rgba(20,20,20,.6)),
+        url("https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1100&q=85") center/cover;
+    }
+    .hero-stamp {
+      position: absolute; top: 30px; left: 0;
+      width: 105px; height: 105px; border-radius: 50%;
+      background: var(--orange); color: white;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; font-size: 10px; line-height: 1.6;
+      text-transform: uppercase; letter-spacing: .1em;
+      transform: rotate(-12deg);
+      box-shadow: var(--shadow);
+    }
+    .hero-stamp strong { display: block; font-size: 23px; letter-spacing: -.05em; }
+    .hero-note {
+      position: absolute; bottom: 0; left: 0;
+      background: var(--white); padding: 17px 20px;
+      border-radius: 12px; box-shadow: var(--shadow);
+      display: flex; gap: 13px; align-items: center;
+    }
+    .note-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: #fce5dc; color: var(--orange);
+      display: grid; place-items: center; font-size: 18px;
+    }
+    .hero-note strong { display: block; font-size: 12px; margin-bottom: 4px; }
+    .hero-note small { font-size: 10px; color: var(--muted); }
+
+    .trust-strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 21px 0; }
+    .trust-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    .trust-label { color: var(--muted); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
+    .trust-word { font: 800 15px "Manrope", sans-serif; color: #96938b; letter-spacing: -.04em; }
+
+    .section { padding: 85px 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 25px; margin-bottom: 28px; }
+    .section h2 { font: 600 clamp(30px, 4vw, 43px)/1.15 "Manrope", sans-serif; letter-spacing: -.065em; margin-top: 13px; }
+    .section-sub { color: var(--muted); font-size: 13px; line-height: 1.7; margin-top: 10px; max-width: 430px; }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0; }
+    .filter {
+      border: 1px solid var(--line); border-radius: 999px;
+      padding: 10px 15px; background: transparent; color: #66645d; font-size: 11px;
+    }
+    .filter.active, .filter:hover { background: var(--ink); border-color: var(--ink); color: white; }
+
+    .search-box {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--white); border: 1px solid var(--line);
+      border-radius: 999px; padding: 0 16px; min-width: 245px;
+    }
+    .search-box span { color: var(--muted); }
+    .search-box input { border: 0; outline: 0; background: transparent; padding: 13px 0; width: 100%; font-size: 12px; color: var(--ink); }
+    .event-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .event-card {
+      background: var(--white); border: 1px solid #eeece5;
+      border-radius: var(--radius); overflow: hidden;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .event-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+    .event-cover { height: 205px; position: relative; overflow: hidden; background: #ded9ce; }
+    .event-cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s; }
+    .event-card:hover .event-cover img { transform: scale(1.04); }
+    .event-tag {
+      position: absolute; left: 13px; top: 13px;
+      background: rgba(255,254,250,.94); color: var(--ink);
+      border-radius: 999px; padding: 7px 10px;
+      font-size: 9px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    }
+    .event-body { padding: 20px; }
+    .event-date { color: var(--orange-dark); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+    .event-body h3 { font: 700 18px/1.4 "Manrope", sans-serif; letter-spacing: -.04em; margin: 9px 0; }
+    .event-description { color: var(--muted); font-size: 11px; line-height: 1.7; min-height: 38px; }
+    .event-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .venue { color: #69675f; font-size: 10px; overflow-wrap: anywhere; }
+    .event-capacity { font-size: 10px; font-weight: 700; white-space: nowrap; }
+    .event-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 16px; }
+    .text-link { color: var(--orange-dark); font-size: 11px; font-weight: 700; }
+    .text-link:hover { text-decoration: underline; }
+
+    .loading, .empty-state, .error-state {
+      grid-column: 1 / -1; text-align: center; padding: 58px 20px;
+      background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+    }
+    .loading { color: var(--muted); }
+    .empty-state h3, .error-state h3 { font: 700 21px "Manrope", sans-serif; margin-bottom: 8px; }
+    .empty-state p, .error-state p { color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .error-state .btn { margin-top: 18px; }
+
+    .banner { padding: 0 0 85px; }
+    .banner-inner {
+      background: #e8e4d9; border-radius: 22px; padding: 48px;
+      display: flex; align-items: center; justify-content: space-between; gap: 30px;
+      position: relative; overflow: hidden;
+    }
+    .banner-inner::after {
+      content: "G."; position: absolute; right: 20%; bottom: -105px;
+      font: 800 250px "Manrope", sans-serif; color: rgba(255,255,255,.34);
+      letter-spacing: -.1em; pointer-events: none;
+    }
+    .banner-copy { max-width: 470px; position: relative; z-index: 1; }
+    .banner-copy h2 { font: 700 clamp(29px, 4vw, 43px)/1.15 "Manrope", sans-serif; letter-spacing: -.06em; margin: 15px 0; }
+    .banner-copy p { color: #6c6961; font-size: 12px; line-height: 1.8; }
+    .banner .btn { position: relative; z-index: 1; flex-shrink: 0; }
+
+    footer { background: #1b1b19; color: #f8f5ed; padding: 44px 0 24px; }
+    .footer-main { display: flex; justify-content: space-between; gap: 30px; padding-bottom: 38px; }
+    .footer-brand p { color: #a6a39a; font-size: 11px; line-height: 1.8; max-width: 260px; margin-top: 14px; }
+    .footer-links { display: flex; gap: 45px; }
+    .footer-col h4 { font-size: 10px; text-transform: uppercase; letter-spacing: .12em; margin-bottom: 15px; }
+    .footer-col a { display: block; color: #aaa79f; font-size: 11px; margin: 10px 0; }
+    .footer-col a:hover { color: white; }
+    .footer-bottom { border-top: 1px solid #3a3934; padding-top: 20px; display: flex; justify-content: space-between; gap: 20px; color: #8f8c84; font-size: 10px; }
+
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(20,20,18,.62); backdrop-filter: blur(5px);
+      display: none; align-items: center; justify-content: center;
+      padding: 20px; overflow-y: auto;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      width: min(470px, 100%); background: var(--white);
+      border-radius: 20px; padding: 30px; position: relative;
+      max-height: calc(100vh - 40px); overflow-y: auto;
+      box-shadow: 0 30px 100px rgba(0,0,0,.25);
+    }
+    .modal-close {
+      position: absolute; right: 17px; top: 17px; width: 33px; height: 33px;
+      border: 1px solid var(--line); border-radius: 50%; background: transparent;
+      font-size: 18px; color: var(--ink);
+    }
+    .modal h2 { font: 700 27px "Manrope", sans-serif; letter-spacing: -.06em; padding-right: 30px; }
+    .modal-intro { color: var(--muted); font-size: 12px; line-height: 1.7; margin: 9px 0 22px; }
+    .form-group { margin: 15px 0; }
+    .form-group label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 7px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; border: 1px solid #dedbd2; border-radius: 10px;
+      padding: 12px 13px; outline: none; background: #fffefa; font-size: 12px;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--orange); box-shadow: 0 0 0 3px #ef623b1a; }
+    .form-group textarea { min-height: 95px; resize: vertical; }
+    .form-message { padding: 12px; border-radius: 9px; font-size: 11px; line-height: 1.6; margin: 13px 0; display: none; }
+    .form-message.show { display: block; }
+    .form-message.success { background: #e5f0e5; color: #285432; }
+    .form-message.error { background: #fbe8e3; color: #9d321b; }
+    .form-submit { width: 100%; margin-top: 10px; }
+    .modal .fine-print { color: var(--muted); font-size: 10px; text-align: center; line-height: 1.6; margin-top: 14px; }
+
+    .toast {
+      position: fixed; bottom: 22px; right: 22px; z-index: 150;
+      background: var(--ink); color: white; border-radius: 12px;
+      padding: 15px 20px; font-size: 12px; box-shadow: var(--shadow);
+      transform: translateY(120px); opacity: 0; transition: .25s;
+      max-width: calc(100% - 44px);
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    @media (max-width: 900px) {
+      .hero-grid { gap: 32px; }
+      .hero-art { min-height: 390px; }
+      .event-grid { grid-template-columns: repeat(2, 1fr); }
+      .trust-word { font-size: 12px; }
+    }
+    @media (max-width: 650px) {
+      .container { width: min(100% - 32px, 520px); }
+      header { height: 68px; }
+      .brand { font-size: 27px; }
+      .nav-links { display: none; }
+      .nav-actions .btn-outline { display: none; }
+      .nav-actions .btn { padding: 10px 14px; font-size: 11px; }
+      .hero { padding: 48px 0 45px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 35px; }
+      h1 { font-size: clamp(48px, 13vw, 66px); }
+      .hero-art { min-height: 370px; }
+      .hero-photo { left: 24px; }
+      .hero-stamp { width: 86px; height: 86px; font-size: 8px; }
+      .hero-stamp strong { font-size: 19px; }
+      .trust-inner { justify-content: center; flex-wrap: wrap; gap: 16px 22px; }
+      .trust-label { width: 100%; text-align: center; }
+      .trust-word { font-size: 12px; }
+      .section { padding: 62px 0; }
+      .section-head { align-items: start; flex-direction: column; }
+      .search-box { width: 100%; }
+      .event-grid { grid-template-columns: 1fr; gap: 16px; }
+      .event-cover { height: 220px; }
+      .banner { padding-bottom: 60px; }
+      .banner-inner { padding: 28px 23px; flex-direction: column; align-items: start; }
+      .banner-inner::after { right: 0; font-size: 180px; bottom: -70px; }
+      .footer-main { flex-direction: column; }
+      .footer-links { gap: 35px; flex-wrap: wrap; }
+      .footer-bottom { flex-direction: column; }
+      .modal { padding: 25px 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="announcement">Good things happen when we <span>gather.</span> &nbsp;✳</div>
+
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#" aria-label="Gather home">gather<span>.</span></a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#events">Discover</a>
+        <a href="#about">Our story</a>
+        <a href="#organizers">For organizers</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-outline" href="#events">Explore events ↗</a>
+        <button class="btn btn-dark" id="organizerLoginBtn">Organizer login</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">Make room for memorable</span>
+          <h1>Your next great story starts <em>here.</em></h1>
+          <p class="hero-copy">From ideas worth sharing to people worth meeting, find experiences that bring your world a little closer together.</p>
+          <div class="hero-actions">
+            <a href="#events" class="btn btn-orange">Find your next event <span>↗</span></a>
+            <button class="btn btn-outline" id="heroOrganizerBtn">I'm an organizer</button>
+          </div>
+          <div class="hero-foot">
+            <div class="avatars" aria-hidden="true">
+              <span class="avatar">A</span><span class="avatar">J</span><span class="avatar">M</span><span class="avatar">T</span>
+            </div>
+            <p><strong>Good people. Great experiences.</strong><br>Your next connection could start here.</p>
+          </div>
+        </div>
+        <div class="hero-art" aria-label="People enjoying a live event">
+          <div class="hero-photo"></div>
+          <div class="hero-stamp">Made for<br><strong>moments</strong> worth<br>remembering</div>
+          <div class="hero-note">
+            <div class="note-icon">✳</div>
+            <div><strong>Something good is happening.</strong><small>Find your people. Be part of it.</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="trust-strip">
+      <div class="container trust-inner">
+        <span class="trust-label">A little something for everyone</span>
+        <span class="trust-word">Ideas</span>
+        <span class="trust-word">Community</span>
+        <span class="trust-word">Culture</span>
+        <span class="trust-word">Connection</span>
+      </div>
+    </div>
+
+    <section class="section" id="events">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">The good stuff</span>
+            <h2>Find your kind of <em style="color:var(--orange);font-style:normal">gathering.</em></h2>
+            <p class="section-sub">Little discoveries, big ideas, and moments that stay with you. Your next experience is waiting.</p>
+          </div>
+          <label class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="eventSearch" type="search" placeholder="Search events or venues..." aria-label="Search events" />
+          </label>
+        </div>
+
+        <div class="filters" aria-label="Event filters">
+          <button class="filter active" data-filter="all">All events</button>
+          <button class="filter" data-filter="upcoming">Upcoming</button>
+          <button class="filter" data-filter="this-month">This month</button>
+        </div>
+
+        <div class="event-grid" id="eventGrid" aria-live="polite">
+          <div class="loading">Finding good things for you...</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="banner" id="organizers">
+      <div class="container">
+        <div class="banner-inner">
+          <div class="banner-copy">
+            <span class="eyebrow">For the ones who bring us together</span>
+            <h2>You create the moment. We'll help people find it.</h2>
+            <p>From intimate meetups to ambitious gatherings, give your next event a home and make registration simple.</p>
+          </div>
+          <button class="btn btn-dark" id="bannerOrganizerBtn">Bring your event to Gather ↗</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about" style="padding-top:0">
+      <div class="container" style="max-width:760px;text-align:center">
+        <span class="eyebrow">A little more human</span>
+        <h2>Life happens <em style="color:var(--orange);font-style:normal">together.</em></h2>
+        <p class="section-sub" style="margin:17px auto 0">Gather is built around a simple idea: the best experiences aren't just things you attend. They're the people you meet, the conversations you start, and the memories you take home.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-main">
+        <div class="footer-brand">
+          <a class="brand" href="#" style="color:#f8f5ed">gather<span>.</span></a>
+          <p>Making it easier to find your people, discover new experiences, and bring good ideas to life.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Explore</h4>
+            <a href="#events">All events</a>
+            <a href="#about">Our story</a>
+          </div>
+          <div class="footer-col">
+            <h4>Organizers</h4>
+            <a href="#" id="footerLoginBtn">Organizer login</a>
+            <a href="#organizers">Host an event</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Gather. Made for moments that matter.</span>
+        <span>Thoughtfully brought together.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="registrationModal" role="dialog" aria-modal="true" aria-labelledby="registrationTitle">
+    <div class="modal">
+      <button class="modal-close" type="button" data-close aria-label="Close dialog">×</button>
+      <span class="eyebrow">Save your spot</span>
+      <h2 id="registrationTitle" style="margin-top:13px">Be part of it.</h2>
+      <p class="modal-intro" id="registrationIntro">A few details and you're on your way.</p>
+      <form id="registrationForm">
+        <input type="hidden" id="registrationEventId" />
+        <div class="form-group">
+          <label for="attendeeName">Full name</label>
+          <input id="attendeeName" name="fullName" autocomplete="name" required maxlength="100" placeholder="Your full name" />
+        </div>
+        <div class="form-group">
+          <label for="attendeeEmail">Email address</label>
+          <input id="attendeeEmail" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com" />
+        </div>
+        <div class="form-message" id="registrationMessage" role="status"></div>
+        <button class="btn btn-orange form-submit" type="submit" id="registrationSubmit">Confirm my spot ↗</button>
+      </form>
+      <p class="fine-print">Your registration is handled securely by the Gather event service.</p>
+    </div>
+  </div>
+  
+<div class="modal-backdrop" id="eventDetailsModal" role="dialog" aria-modal="true" aria-labelledby="eventDetailsTitle">
+  <div class="modal">
+    <button class="modal-close" type="button" data-close aria-label="Close dialog">×</button>
+    <span class="eyebrow" id="eventDetailsCategory">Gather. Event</span>
+    <h2 id="eventDetailsTitle" style="margin-top:13px">Event details</h2>
+    <p class="modal-intro" id="eventDetailsDate"></p>
+    <p id="eventDetailsDescription" style="line-height:1.8; margin:20px 0"></p>
+    <div class="event-meta" style="display:grid; gap:12px; margin-bottom:24px">
+      <span class="venue" id="eventDetailsVenue"></span>
+      <span class="event-capacity" id="eventDetailsCapacity"></span>
+    </div>
+    <button class="btn btn-orange form-submit" type="button" id="eventDetailsRegister">
+      Reserve a spot ↗
+    </button>
+  </div>
+</div>
+
+
+  <div class="modal-backdrop" id="organizerModal" role="dialog" aria-modal="true" aria-labelledby="organizerTitle">
+    <div class="modal">
+      <button class="modal-close" type="button" data-close aria-label="Close dialog">×</button>
+      <span class="eyebrow">The people behind the moments</span>
+      <h2 id="organizerTitle" style="margin-top:13px">Welcome back.</h2>
+      <p class="modal-intro">Sign in to manage your events and bring people together.</p>
+      <form id="organizerLoginForm">
+        <div class="form-group">
+          <label for="organizerEmail">Email address</label>
+          <input id="organizerEmail" name="email" type="email" autocomplete="username" required placeholder="organizer@example.com" />
+        </div>
+        <div class="form-group">
+          <label for="organizerPassword">Password</label>
+          <input id="organizerPassword" name="password" type="password" autocomplete="current-password" required placeholder="Your password" />
+        </div>
+        <div class="form-message" id="organizerMessage" role="status"></div>
+        <button class="btn btn-dark form-submit" id="organizerLoginSubmit" type="submit">Sign in ↗</button>
+      </form>
+      <p class="fine-print">Organizer accounts are managed by the event service. Your password is never shown on this page.</p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const API_BASE = "http://localhost:5000/api";
+    const eventGrid = document.getElementById("eventGrid");
+    const searchInput = document.getElementById("eventSearch");
+    const filterButtons = document.querySelectorAll("[data-filter]");
+    const registrationModal = document.getElementById("registrationModal");
+    const organizerModal = document.getElementById("organizerModal");
+    let events = [];
+    let activeFilter = "all";
+    let toastTimer;
+
+    const imagePool = [
+      "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=900&q=80"
+    ];
+
+    function escapeHTML(value = "") {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[char]);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 3400);
+    }
+
+    function showMessage(element, message, type) {
+      element.textContent = message;
+      element.className = `form-message show ${type}`;
+    }
+
+    function clearMessage(element) {
+      element.textContent = "";
+      element.className = "form-message";
+    }
+
+    async function apiRequest(path, options = {}) {
+      const response = await fetch(`${API_BASE}${path}`, {
+        ...options,
+        headers: {
+          ...(options.body ? { "Content-Type": "application/json" } : {}),
+          ...(options.headers || {})
+        }
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.message || "Something went wrong. Please try again.");
+      return data;
+    }
+
+    function formatDate(dateValue) {
+      const date = new Date(dateValue);
+      if (Number.isNaN(date.getTime())) return "Date to be announced";
+      return new Intl.DateTimeFormat("en-NG", {
+        day: "numeric", month: "short", year: "numeric"
+      }).format(date);
+    }
+
+    function categoryFor(event) {
+      const text = `${event.title || ""} ${event.description || ""}`.toLowerCase();
+      if (/tech|developer|software|innovation|digital|ai\b/.test(text)) return "Technology";
+      if (/music|concert|festival|dj|live band/.test(text)) return "Music & culture";
+      if (/business|startup|entrepreneur|network|career/.test(text)) return "Business";
+      if (/food|cook|culinary|dinner|taste/.test(text)) return "Food & lifestyle";
+      if (/art|design|creative|photo|film/.test(text)) return "Arts & creativity";
+      return "Community";
+    }
+
+    function eventImage(event, index) {
+      return imagePool[index % imagePool.length];
+    }
+
+    function matchesFilter(event) {
+      const date = new Date(event.date);
+      const now = new Date();
+      if (activeFilter === "upcoming") return !Number.isNaN(date.getTime()) && date > now;
+      if (activeFilter === "this-month") {
+        return !Number.isNaN(date.getTime()) &&
+          date.getMonth() === now.getMonth() &&
+          date.getFullYear() === now.getFullYear() &&
+          date >= now;
+      }
+      return true;
+    }
+
+    function renderEvents() {
+      const query = searchInput.value.trim().toLowerCase();
+      const filtered = events.filter(event => {
+        const searchable = `${event.title || ""} ${event.description || ""} ${event.venue || ""}`.toLowerCase();
+        return searchable.includes(query) && matchesFilter(event);
+      });
+
+      if (!filtered.length) {
+        eventGrid.innerHTML = `
+          <div class="empty-state">
+            <h3>No gatherings found just yet.</h3>
+            <p>Try another search, change the filter, or check back when new events are added.</p>
+          </div>`;
+        return;
+      }
+
+      eventGrid.innerHTML = filtered.map(event => {
+        const index = events.indexOf(event);
+        const eventDate = new Date(event.date);
+        const dateLabel = Number.isNaN(eventDate.getTime()) ? "Date to be announced" : formatDate(event.date);
+        const capacity = Number(event.capacity);
+        const remaining = Number.isFinite(capacity) ? Math.max(capacity, 0) : null;
+        const isPast = !Number.isNaN(eventDate.getTime()) && eventDate <= new Date();
+
+        return `
+          <article class="event-card" data-event-details="${escapeHTML(event._id)}" tabindex="0" role="button" aria-label="View details for ${escapeHTML(event.title || "Event")}">
+            <div class="event-cover">
+              <img src="${eventImage(event, index)}" alt="${escapeHTML(event.title || "Event")} event photography" loading="lazy" />
+              <span class="event-tag">${escapeHTML(categoryFor(event))}</span>
+            </div>
+            <div class="event-body">
+              <p class="event-date">${escapeHTML(dateLabel)}</p>
+              <h3>${escapeHTML(event.title || "Untitled event")}</h3>
+              <p class="event-description">${escapeHTML(event.description || "Join us for a memorable experience.")}</p>
+              <div class="event-meta">
+                <span class="venue">⌖ &nbsp;${escapeHTML(event.venue || "Venue to be announced")}</span>
+                <span class="event-capacity">${remaining === null ? "Registration open" : `${remaining} spots total`}</span>
+              </div>
+              <div class="event-bottom">
+                <span class="venue">${isPast ? "Event has passed" : "Come as you are."}</span>
+                <button class="text-link" data-register="${escapeHTML(event._id)}" ${isPast ? "disabled" : ""}>
+                  ${isPast ? "Closed" : "Reserve a spot ↗"}
+                </button>
+              </div>
+            </div>
+          </article>`;
+      }).join("");
+    }
+
+    async function loadEvents() {
+      eventGrid.innerHTML = '<div class="loading">Finding good things for you...</div>';
+      try {
+        const data = await apiRequest("/events");
+        events = Array.isArray(data) ? data : [];
+        renderEvents();
+      } catch (error) {
+        eventGrid.innerHTML = `
+          <div class="error-state">
+            <h3>We couldn't load the gatherings.</h3>
+            <p>Make sure the Gather API is running on port 5000, then try again.</p>
+            <button class="btn btn-dark" id="retryEvents">Try again ↻</button>
+          </div>`;
+        document.getElementById("retryEvents").addEventListener("click", loadEvents);
+      }
+    }
+
+    function openModal(modal) {
+      modal.classList.add("open");
+      document.body.style.overflow = "hidden";
+      const firstInput = modal.querySelector("input:not([type=hidden])");
+      if (firstInput) setTimeout(() => firstInput.focus(), 50);
+    }
+
+    function closeModal(modal) {
+      modal.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    function openOrganizerLogin() {
+      clearMessage(document.getElementById("organizerMessage"));
+      openModal(organizerModal);
+    }
+
+    function openRegistration(eventId) {
+      const event = events.find(item => item._id === eventId);
+      if (!event) return;
+      document.getElementById("registrationEventId").value = eventId;
+      document.getElementById("registrationIntro").textContent =
+        `You're registering for ${event.title}. Add your details to save your spot.`;
+      document.getElementById("registrationForm").reset();
+      document.getElementById("registrationEventId").value = eventId;
+      clearMessage(document.getElementById("registrationMessage"));
+      document.getElementById("registrationSubmit").disabled = false;
+      document.getElementById("registrationSubmit").textContent = "Confirm my spot ↗";
+      openModal(registrationModal);
+    }
+    
+function openEventDetails(eventId) {
+  const event = events.find(item => item._id === eventId);
+  if (!event) return;
+
+  const eventDate = new Date(event.date);
+  const isValidDate = !Number.isNaN(eventDate.getTime());
+
+  document.getElementById("eventDetailsCategory").textContent =
+    categoryFor(event);
+
+  document.getElementById("eventDetailsTitle").textContent =
+    event.title || "Untitled event";
+
+  document.getElementById("eventDetailsDate").textContent =
+    isValidDate
+      ? eventDate.toLocaleString(undefined, {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit"
+        })
+      : "Date to be announced";
+
+  document.getElementById("eventDetailsDescription").textContent =
+    event.description || "Join us for a memorable experience.";
+
+  document.getElementById("eventDetailsVenue").textContent =
+    `⌖  ${event.venue || "Venue to be announced"}`;
+
+  document.getElementById("eventDetailsCapacity").textContent =
+    event.capacity != null
+      ? `${event.capacity} total spots`
+      : "Registration open";
+
+  const registerButton = document.getElementById("eventDetailsRegister");
+  const isPast = isValidDate && eventDate < new Date();
+
+  registerButton.disabled = isPast;
+  registerButton.textContent = isPast
+    ? "Registration closed"
+    : "Reserve a spot ↗";
+
+  registerButton.dataset.eventId = eventId;
+
+  openModal(document.getElementById("eventDetailsModal"));
+}
+
+document.getElementById("eventDetailsRegister").addEventListener("click", function () {
+  const eventId = this.dataset.eventId;
+
+  closeModal(document.getElementById("eventDetailsModal"));
+
+  if (eventId) {
+    openRegistration(eventId);
+  }
+});
+
+
+    filterButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        filterButtons.forEach(item => item.classList.toggle("active", item === button));
+        renderEvents();
+      });
+    });
+
+    searchInput.addEventListener("input", renderEvents);
+    eventGrid.addEventListener("click", event => {
+  const registerButton = event.target.closest("[data-register]");
+
+  if (registerButton) {
+    if (!registerButton.disabled) {
+      openRegistration(registerButton.dataset.register);
+    }
+    return;
+  }
+
+  const eventCard = event.target.closest("[data-event-details]");
+
+  if (eventCard) {
+    openEventDetails(eventCard.dataset.eventDetails);
+  }
+});
+
+
+    document.querySelectorAll("[data-close]").forEach(button => {
+      button.addEventListener("click", () => closeModal(button.closest(".modal-backdrop")));
+    });
+
+    [registrationModal, organizerModal].forEach(modal => {
+      modal.addEventListener("click", event => {
+        if (event.target === modal) closeModal(modal);
+      });
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        closeModal(registrationModal);
+        closeModal(organizerModal);
+      }
+    });
+
+    document.getElementById("organizerLoginBtn").addEventListener("click", openOrganizerLogin);
+    document.getElementById("heroOrganizerBtn").addEventListener("click", openOrganizerLogin);
+    document.getElementById("bannerOrganizerBtn").addEventListener("click", openOrganizerLogin);
+    document.getElementById("footerLoginBtn").addEventListener("click", event => {
+      event.preventDefault();
+      openOrganizerLogin();
+    });
+
+    document.getElementById("registrationForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const button = document.getElementById("registrationSubmit");
+      const message = document.getElementById("registrationMessage");
+      button.disabled = true;
+      button.textContent = "Saving your spot...";
+      clearMessage(message);
+
+      const eventId = document.getElementById("registrationEventId").value;
+      const fullName = document.getElementById("attendeeName").value.trim();
+      const email = document.getElementById("attendeeEmail").value.trim();
+
+      try {
+        const result = await apiRequest(`/events/${encodeURIComponent(eventId)}/register`, {
+          method: "POST",
+          body: JSON.stringify({ fullName, email })
+        });
+        showMessage(message, result.message || "You're registered. We can't wait to see you!", "success");
+        button.textContent = "You're on the list ✓";
+        showToast("Your registration was successful.");
+      } catch (error) {
+        showMessage(message, error.message, "error");
+        button.disabled = false;
+        button.textContent = "Try again ↗";
+      }
+    });
+
+    document.getElementById("organizerLoginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const button = document.getElementById("organizerLoginSubmit");
+      const message = document.getElementById("organizerMessage");
+      button.disabled = true;
+      button.textContent = "Signing in...";
+      clearMessage(message);
+
+      const email = document.getElementById("organizerEmail").value.trim();
+      const password = document.getElementById("organizerPassword").value;
+
+      try {
+        const result = await apiRequest("/auth/login", {
+          method: "POST",
+          body: JSON.stringify({ email, password })
+        });
+
+        if (!result.token) throw new Error("The server did not return an authentication token.");
+
+        // Pass the token to the dashboard in memory, not browser storage.
+       
+      closeModal(organizerModal);
+
+      sessionStorage.setItem("gatherOrganizerToken", result.token);
+      sessionStorage.setItem(
+        "gatherOrganizerName",
+        result.organizer?.fullName || result.organizer?.name || "Organizer"
+      );
+
+      showToast("Login successful. Opening your dashboard…");
+
+      window.location.href = "/dashboard.html";
+    } catch (error) {
+      showMessage(message, error.message, "error");
+    } finally {
+      button.disabled = false;
+      button.textContent = "Sign in ↗";
+    }
+  });
+
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+    loadEvents();
+  </script>
+</body>
+</html>
