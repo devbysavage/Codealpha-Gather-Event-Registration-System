@@ -27,6 +27,11 @@ const eventSchema = new mongoose.Schema(
       required: true,
       min: 1,
     },
+    organizer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organizer",
+      required: false,
+    },
   },
   { timestamps: true }
 );

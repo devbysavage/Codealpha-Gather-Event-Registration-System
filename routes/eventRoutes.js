@@ -24,11 +24,12 @@ router.post("/", protect, async (req, res) => {
     }
 
     const event = await Event.create({
-      title,
-      description,
-      date,
-      venue,
-      capacity,
+       title,
+       description,
+       date,
+       venue,
+       capacity,
+       organizer: req.organizerId,
     });
 
     res.status(201).json({

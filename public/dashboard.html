@@ -619,11 +619,13 @@ async function cancelRegistration(registrationId) {
 
   try {
     const response = await fetch(
-      `/api/registrations/${registrationId}`,
-      {
-        method: "DELETE"
-      }
-    );
+  `/api/registrations/${registrationId}`,
+   {
+      method: "DELETE",
+      headers: {
+          Authorization: `Bearer ${organizerToken}`,
+        },
+   });
 
     const result = await response.json();
 
